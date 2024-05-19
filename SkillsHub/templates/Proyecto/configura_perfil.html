@@ -1,0 +1,38 @@
+{% extends './base.html' %}
+
+{% block content %}
+<div class="container mt-5">
+    <div class="row">
+        <div class="col-md-6 offset-md-3">
+            <div class="card">
+                <div class="card-body">
+                    <h1 class="card-title">Perfil de Usuario</h1>
+                    <form method="post" enctype="multipart/form-data">
+                        {% csrf_token %}
+                        <div class="form-group">
+                            <label for="id_saldo">Saldo</label>
+                            <input type="number" class="form-control" id="id_saldo" name="saldo" step="0.01" placeholder="Ingresa tu saldo" value="{{ user.saldo|stringformat:"s" }}">
+
+                        </div>
+                        <div class="form-group">
+                            <label for="id_comentario">Comentario</label>
+                            <textarea class="form-control" id="id_comentario" name="comentario" rows="3" placeholder="Ingresa una descripción">{{ user.comentario }}</textarea>
+                        </div>
+                        <div class="form-group">
+                            <label for="id_avatar">Avatar</label>
+                            <input type="file" class="form-control-file" id="id_avatar" name="avatar">
+                            {% if user.avatar %}
+                                <img src="{{ user.avatar.url }}" alt="Avatar" class="mt-2" style="max-width: 150px;">
+                            {% endif %}
+                        </div>
+                        <div class="text-center mt-3">
+                            <button type="submit" class="btn btn-primary">Guardar Cambios</button>
+                            <a href="{% url 'perfil_usuario' user.pk %}" class="btn btn-secondary">Volver al perfil</a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

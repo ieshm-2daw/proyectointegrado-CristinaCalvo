@@ -1,0 +1,154 @@
+{% load static %}
+
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>SkillsHub</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-Zenh87qX5JnK2Jl0vWa8Ck2rdkQ2Bzep5IDxbcnCeuOxjzrPF/et3URy9Bv1WTRi" crossorigin="anonymous">
+    <link href='//fonts.googleapis.com/css?family=Lobster&subset=latin,latin-ext' rel='stylesheet' type='text/css'>
+    <style>
+        body {
+            background-color: #FFF7F1;
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            position: sticky; 
+            top: 0;
+            left: 0;
+            width: 100%;
+            z-index: 1;
+        }
+        
+        .page-header {
+            background-color: #9EDDFF;
+        }
+
+        .page-header nav {
+            display: flex;
+        }
+
+        .page-header h1 {
+            margin-left: 15px;
+            color: #04364A;
+            margin-top: 10px;
+            
+        }
+
+        .btn-container {
+            text-align: center;
+        }
+
+        .btn {
+            display: inline-block;
+            padding: 10px 20px;
+            margin: 0 10px;
+            font-size: 16px;
+            text-decoration: none;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        .btn-primary {
+            background-color: #007bff;
+        }
+
+        .btn-primary:hover {
+            background-color: #0056b3;
+        }
+
+        .btn-secondary {
+            background-color: #6c757d;
+        }
+
+        .btn-secondary:hover {
+            background-color: #545b62;
+        }
+
+        .btn-warning {
+            background-color: #ffc107;
+            width: 138px; 
+            height: 40px; 
+            margin-left: 10px;
+            margin-top: 12px;
+        }
+
+        .success {
+            background-color: #37b855;
+            width: 138px; 
+            height: 40px; 
+            margin-top: 12px;
+            margin-left: auto;
+        }
+
+        .info {
+            background-color: #17a2b8;
+            width: 140px; 
+            height: 40px; 
+            margin-left: 10px;
+            margin-top: 12px;
+        }
+
+        .info:hover {
+            background-color: #117a8b;
+        }
+    </style>
+</head>
+<body>
+    <div class="page-header">
+        <nav>
+            <h1><a href="{% url 'servicios' %}" style="text-decoration: none; color: inherit;">SkillsHub</a></h1>
+           
+            {% if user.is_authenticated %}
+
+            {% if request.user.is_authenticated and request.user.is_superuser %}
+                <a href="{% url 'gestion' %}" class="btn btn-warning">Gestión</a>
+            {% endif %}
+        
+            <a href="{% url 'nuevo_servicio' %}" class="btn success btn-success">Vender</a>
+            <a href="{% url 'rooms' %}" class="btn btn-info info text-white">Mensajes</a>
+            <form action="{% url 'logout' %}" method="post">
+                {% csrf_token %}
+                <button type="submit" class="btn btn-info info text-white">Cerrar Sesión</button>
+            </form>
+                       
+            {% else %}
+                <a href="{% url 'login' %}" class="btn btn-info text-white">Iniciar Sesión</a>
+                <a href="{% url 'register' %}" class="btn btn-info text-white">Regístrate</a>
+            {% endif %}
+
+            <div class="d-flex align-items-center">
+
+                {% if user.avatar %}
+                    <a href="{% url 'perfil_usuario' user.pk%}"><img src="{{ user.avatar.url }}" style="width: 30px; height: 30px; border-radius: 50%; margin-right: 10px;"></a>
+                {% endif %}
+
+            
+            </div>
+        </nav>
+    </div>
+    
+    {% if messages %}
+        <div>    
+            <ul class="messages">
+                {% for message in messages %}
+                    <li>{{ message }}</li>
+                {% endfor %}
+            </ul>
+        </div>
+    {% endif %}
+    
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col">
+                {% block content %}
+                
+                {% endblock %}
+            </div>
+        </div>
+    </div>
+</body>
+</html>

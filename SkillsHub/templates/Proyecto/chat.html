@@ -1,0 +1,148 @@
+{% extends './base.html' %}
+{% block content %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chat</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f0f0f0;
+            margin: 0;
+            padding: 0;
+        }        
+
+
+        .chat-container {
+            max-width: 800px;
+            margin: 20px auto;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            background-color: #fff;
+            max-height: 85vh; 
+            overflow-y: auto;
+        }
+
+        .title-container {
+            background-color: #17a2b8;
+            color: white;
+            padding: 10px 20px;
+            border-radius: 10px 10px 0 0;
+            display: flex;
+            align-items: center;
+            position: sticky; 
+            top: 0;
+            left: 0;
+            width: 100%;
+            z-index: 1;
+        }
+
+        .title-container h1 {
+            margin: 0;
+            font-size: 18px;
+        }
+
+        .message {
+            max-width: 70%;
+            margin:12px;
+            margin-bottom: 20px;
+            padding: 10px 20px;
+            border-radius: 20px;
+            word-wrap: break-word;
+        }
+
+        .message.mine {
+            background-color: #6bc4c0;
+            color: #fff;
+            margin-left: auto;
+        }
+
+        .message.other {
+            background-color: #69c295;
+            color: #fff;
+        }
+
+        .message-content {
+            font-size: 16px;
+        }
+
+        input[type="text"] {
+            width: calc(100% - 100px);
+            padding: 10px;
+            border-radius: 5px 0 0 5px;
+            border: 1px solid #ccc;
+            font-size: 16px;
+            outline: none;
+        }
+
+        button {
+            padding: 10px 25px;
+            border-radius: 0 5px 5px 0;
+            border: none;
+            background-color: #37b855;
+            color: #fff;
+            font-size: 16px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <div class="chat-container">
+        <div class="title-container">
+            <a href="{% url 'perfil_usuario' otro.pk%}"><img src="{{ otro.avatar.url }}" class="img-fluid rounded-circle" style="max-width: 50px; margin-right: 10px;" alt="Avatar"></a>
+            <h1>{{ otro }}</h1>
+        </div>
+        <div class="chat__item__container" id="id_chat_item_container">
+            {% if mensajes %}
+                {% for mensaje in mensajes %}
+                    {% if mensaje.usuario.username == request.user.username %}
+                        <div class="message mine">
+                            <p class="message-content">{{ mensaje.content }}</p>
+                        </div>
+                    {% else %}
+                        <div class="message other">
+                            <p class="message-content">{{ mensaje.content }}</p>
+                        </div>
+                    {% endif %}
+                {% endfor %}
+            {% endif %}
+        </div>
+        <form id="message-form">
+            <input type="text" id="id_message_send_input" placeholder="Escribe tu mensaje aquí">
+            <button type="submit" id="id_message_send_button">Enviar</button>
+        </form>
+    </div>
+
+    <script>
+        const roomSlug = "{{ room.slug }}";
+        const chatSocket = new WebSocket("ws://" + window.location.host + "/chat/" + roomSlug + "/");
+        chatSocket.onopen = function (e) {
+            console.log("La conexión se estableció correctamente!");
+        };
+        chatSocket.onclose = function (e) {
+            console.log("¡Algo inesperado sucedió!");
+        };
+        document.querySelector("#id_message_send_input").focus();
+        document.querySelector("#message-form").onsubmit = function (e) {
+            e.preventDefault();
+            const messageInput = document.querySelector("#id_message_send_input").value;
+            chatSocket.send(JSON.stringify({ message: messageInput, username: "{{ request.user.username }}" }));
+            document.querySelector("#id_message_send_input").value = "";
+        };
+        chatSocket.onmessage = function (e) {
+            const data = JSON.parse(e.data);
+            var div = document.createElement("div");
+            if (data.username === "{{ request.user.username }}") {
+                div.classList.add("message", "mine");
+            } else {
+                div.classList.add("message", "other");
+            }
+            div.innerHTML = `<p class="message-content">${data.message}</p>`;
+            document.querySelector("#id_chat_item_container").appendChild(div);
+        };
+    </script>
+</body>
+</html>
+{% endblock %}

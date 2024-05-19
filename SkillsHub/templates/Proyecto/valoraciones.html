@@ -1,0 +1,32 @@
+{% extends './base.html' %}
+
+{% block content %}
+<div class="container mt-5">
+    <div class="card">
+        <div class="card-body">
+            <h1 class="display-4">Valorar {{ compra.servicio.nombre }}</h1>
+
+            <form method="post" enctype="multipart/form-data" required>
+                {% csrf_token %}
+                <div class="form-group" required>
+                    <label for="id_valoracion">Valoración</label>
+                    <textarea class="form-control" id="id_valoracion" name="valoracion" rows="3" placeholder="Ingresa tu valoración">{{ user.compras_realizadas.first.valoracion }}</textarea>
+                </div>
+                <div class="form-group mt-2" required>
+                    <label for="id_puntuacion">Puntuación</label>
+                    <select class="form-control" id="id_puntuacion" name="puntuacion">
+                        <option value="0" {% if user.compras_realizadas.first.puntuacion == 0 %} selected {% endif %}>0</option>
+                        <option value="1" {% if user.compras_realizadas.first.puntuacion == 1 %} selected {% endif %}>1</option>
+                        <option value="2" {% if user.compras_realizadas.first.puntuacion == 2 %} selected {% endif %}>2</option>
+                        <option value="3" {% if user.compras_realizadas.first.puntuacion == 3 %} selected {% endif %}>3</option>
+                        <option value="4" {% if user.compras_realizadas.first.puntuacion == 4 %} selected {% endif %}>4</option>
+                        <option value="5" {% if user.compras_realizadas.first.puntuacion == 5 %} selected {% endif %}>5</option>
+                    </select>
+                </div>
+                <button type="submit" class="btn btn-success mt-2">Publicar</button>
+                <a href="{% url 'detalles' pk=compra.servicio.pk %}" class="btn btn-danger mt-2">Cancelar</a>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}

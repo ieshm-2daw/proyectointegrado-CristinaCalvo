@@ -1,0 +1,27 @@
+{% extends './base.html' %}
+{% block content %}
+{% load static %}
+<div class="container mt-4">
+    <h2 class="text-center mb-4">Chats</h2>
+
+    {% if rooms %}
+    <div class="row">
+        {% for room in rooms %}
+        <div class="col-md-4 mb-3">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">Chat con {{ room.otro_usuario }}</h5>
+
+                    <a href="{% url 'chat' room.slug %}" class="btn btn-primary btn-enter-room">Enviar Mensaje</a>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+    {% else %}
+    <div class="alert alert-info" role="alert">
+        No hay chats disponibles en este momento.
+    </div>
+    {% endif %}
+</div>
+{% endblock %}

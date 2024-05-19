@@ -1,0 +1,25 @@
+{% extends './base.html' %}
+
+{% block content %}
+    <div class="container mt-5">
+        <form method="post" action="{% url 'checkout' pk=servicio.pk %}">
+            {% csrf_token %}
+            <div class="row">
+                <div class="col-md-6">
+                    <h2>Confirmar Compra</h2>
+                    <p>¿Quieres comprar {{ servicio.nombre }} por {{ servicio.precio }}€?</p>
+                </div>
+                <div class="col-md-6">
+                    {% if producto.imagen %}
+                        <img src="{{ producto.imagen.url }}" class="img-fluid" alt="{{ producto.nombre }}">
+                    {% endif %}
+                </div>
+            </div>
+
+            <div class="mt-4">
+                <button type="submit" class="btn btn-success mr-2">Comprar</button>
+                <a href="{% url 'detalles' pk=servicio.pk %}" class="btn btn-secondary">Cancelar</a>
+            </div>
+        </form>
+    </div>
+{% endblock %}

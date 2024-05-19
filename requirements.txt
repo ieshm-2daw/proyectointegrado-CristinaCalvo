@@ -1,0 +1,6 @@
+Django~=3.2.10
+Pillow
+djangorestframework
+mysqlclient
+channels
+daphne

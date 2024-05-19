@@ -1,0 +1,58 @@
+{% extends './base.html' %}
+{% block content %}
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Gestión</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f8f9fa;
+            margin: 0;
+            padding: 0;
+        }
+        
+        .container {
+            max-width: 800px;
+            margin: 50px auto;
+            padding: 20px;
+            background-color: #fff;
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .btn-container {
+            text-align: center;
+        }
+
+        .btn-primary {
+            background-color: #007bff;
+        }
+
+        .btn-primary:hover {
+            background-color: #0056b3;
+        }
+
+
+        .btn-secondary {
+            background-color: #6c757d;
+        }
+
+        .btn-secondary:hover {
+            background-color: #545b62;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Panel de Gestión</h1>
+        <div class="btn-container">
+            <a href="{% url 'top_vendedores' %}" class="btn btn-secondary">Top Vendedores</a>
+            <a href="{% url 'top_compradores' %}" class="btn btn-secondary">Top Compradores</a>
+            <a href="{% url 'lista_reportes' %}" class="btn btn-secondary">Lista de Reportes</a>
+        </div>
+    </div>
+</body>
+</html>
+{% endblock %}
