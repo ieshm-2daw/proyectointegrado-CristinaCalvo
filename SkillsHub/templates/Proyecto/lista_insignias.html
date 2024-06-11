@@ -1,0 +1,82 @@
+{% extends './base.html' %}
+{% block content %}
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Insignias Desbloqueadas</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f5f5f5;
+        }
+        .insignia {
+            max-width: 800px;
+            margin: 50px auto;
+            padding: 20px;
+            background-color: #fff;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        h1 {
+            color: #333;
+            text-align: center;
+        }
+        ul {
+            list-style-type: none;
+            padding: 0;
+        }
+        .insignias-lista{
+            margin-bottom: 20px;
+            padding: 15px;
+            background-color: #f9f9f9;
+            border-radius: 5px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            display: flex;
+            align-items: center; 
+        }
+        img {
+            vertical-align: middle;
+            margin-right: 10px;
+            border-radius: 50%;
+        }
+        strong {
+            font-weight: bold;
+            flex-grow: 1; 
+        }
+        .boton {
+            padding: 8px 16px;
+            background-color: #007bff;
+            color: #fff;
+            text-decoration: none;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-left: 10px;
+        }
+        .boton:hover {
+            background-color: #0056b3;
+        }
+    </style>
+</head>
+<body>
+    <div class="container insignia">
+        <h1>Insignias Desbloqueadas</h1>
+        <ul>
+            {% for usuario_insignia in insignias %}
+                <li class="insignias-lista">
+                    <img src="{{ usuario_insignia.insignia.icono.url }}" alt="{{  usuario_insignia.insignia.nombre }}" width="50" height="50">
+                    <strong>{{ usuario_insignia.insignia.nombre }}</strong>
+                    <form action="{% url 'seleccionar_insignia_perfil' usuario_insignia.id %}" method="post">
+                        {% csrf_token %}
+                        <button class="btn boton" type="submit">Mostrar en perfil</button>
+                    </form>
+                </li>
+            {% endfor %}
+        </ul>
+    </div>
+</body>
+</html>
+{% endblock %}

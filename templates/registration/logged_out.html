@@ -1,8 +1,14 @@
-{% extends './base.html'%}{% block content %}
-
-    <h2>Sesión cerrada</h2>
-    <p>Puedes <a href="{% url 'login' %}">iniciar sesión</a> nuevamente</p>
-
-    <a href="{% url 'servicios' %}">Página principal</a><br>
-
+{% extends './base.html' %}
+{% block content %}
+    <div class="container mt-5">
+        <div class="row justify-content-center">
+            <div class="col-md-6">
+                <h2 class="text-center">Sesión cerrada</h2>
+                <p class="text-center">Puedes <a href="{% url 'login' %}">iniciar sesión</a> nuevamente</p>
+                <div class="text-center">
+                    <a href="{% url 'servicios' %}" class="btn btn-primary">Página principal</a>
+                </div>
+            </div>
+        </div>
+    </div>
 {% endblock %}

@@ -1,51 +1,59 @@
 {% extends './base.html' %}
 
 {% block content %}
-<div class="container mt-5">
+<div class="container-fluid mt-5">
     <h1 class="display-4">Actualizar Servicio</h1>
 
-    <div class="card">
+    <div class="card mb-3">
         <div class="card-body">
             <form method="post" action="{% url 'actualiza' pk=servicio.pk %}" enctype="multipart/form-data">
                 {% csrf_token %}
-                <div class="form-group m-3">
-                    <label for="id_nombre">Nombre</label>
-                    <input type="text" class="form-control" id="id_nombre" name="nombre" placeholder="Nombre" value="{{ servicio.nombre }}">
+                <div class="row">
+                    <div class="col-12">
+                        <div class="form-group m-3">
+                            <label for="id_nombre">Nombre</label>
+                            <input type="text" class="form-control" id="id_nombre" name="nombre" placeholder="Nombre" value="{{ servicio.nombre }}">
+                        </div>
+                        <div class="form-group m-3">
+                            <label for="id_precio">Precio</label>
+                            <input type="number" class="form-control" id="id_precio" name="precio" placeholder="Precio" value="{{ servicio.precio|stringformat:"s" }}">
+                        </div>
+                        <div class="form-group m-3">
+                            <label for="id_descripcion">Descripción</label>
+                            <textarea class="form-control" id="id_descripcion" name="descripcion" rows="3" placeholder="Descripción">{{ servicio.descripcion }}</textarea>
+                        </div>
+                        <div class="form-group m-3">
+                            <label for="id_categoria">Categoría</label>
+                            <input type="text" class="form-control" id="id_categoria" name="categoria" placeholder="Categoría" value="{{ servicio.categoria }}">
+                        </div>
+                        <div class="form-group m-3">
+                            <label for="id_ubicacion">Ubicación</label>
+                            <select class="form-control" id="id_ubicacion" name="ubicacion">
+                                <option value="{{ servicio.ubicacion.id }}" selected>{{ servicio.ubicacion.nombre }}</option>
+                                {% for ubicacion in ubicaciones %}
+                                    <option value="{{ ubicacion.id }}">{{ ubicacion.nombre }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                        <div class="form-group m-3">
+                            <label for="id_activo">Activo</label>
+                            <input type="checkbox" class="form-check-input" id="id_activo" name="activo" {% if servicio.activo %}checked{% endif %}>
+                            <label class="form-check-label" for="id_activo">Activo</label>
+                        </div>
+                        <div class="form-group m-3">
+                            <label for="id_imagen">Imagen</label>
+                            <input type="file" class="form-control-file" id="id_imagen" name="imagen">
+                            {% if servicio.imagen %}
+                                <img src="{{ servicio.imagen.url }}" alt="Imagen" class="mt-2" style="max-width: 150px;">
+                            {% endif %}
+                        </div>                
+                    </div>
                 </div>
-                <div class="form-group m-3">
-                    <label for="id_precio">Precio</label>
-                    <input type="number" class="form-control" id="id_precio" name="precio" placeholder="Precio" value="{{ servicio.precio|stringformat:"s" }}">
+                <div class="row">
+                    <div class="col-12 text-center">
+                        <button type="submit" class="btn btn-success">Actualizar</button>
+                    </div>
                 </div>
-                <div class="form-group m-3">
-                    <label for="id_descripcion">Descripción</label>
-                    <textarea class="form-control" id="id_descripcion" name="descripcion" rows="3" placeholder="Descripción">{{ servicio.descripcion }}</textarea>
-                </div>
-                <div class="form-group m-3">
-                    <label for="id_categoria">Categoría</label>
-                    <input type="text" class="form-control" id="id_categoria" name="categoria" placeholder="Categoría" value="{{ servicio.categoria }}">
-                </div>
-                <div class="form-group m-3">
-                    <label for="id_ubicacion">Ubicación</label>
-                    <select class="form-control" id="id_ubicacion" name="ubicacion">
-                        <option value="{{ servicio.ubicacion.id }}" selected>{{ servicio.ubicacion.nombre }}</option>
-                        {% for ubicacion in ubicaciones %}
-                            <option value="{{ ubicacion.id }}">{{ ubicacion.nombre }}</option>
-                        {% endfor %}
-                    </select>
-                </div>
-                <div class="form-group m-3">
-                    <label for="id_activo">Activo</label>
-                    <input type="checkbox" class="form-check-input" id="id_activo" name="activo" {% if servicio.activo %}checked{% endif %}>
-                    <label class="form-check-label" for="id_activo"></label>
-                </div>
-                <div class="form-group m-3">
-                    <label for="id_imagen">Imagen</label>
-                    <input type="file" class="form-control-file" id="id_imagen" name="imagen">
-                    {% if servicio.imagen %}
-                        <img src="{{ servicio.imagen.url }}" alt="Imagen" class="mt-2" style="max-width: 150px;">
-                    {% endif %}
-                </div>                
-                <button type="submit" class="btn btn-success">Actualizar</button>
             </form>
         </div>
     </div>

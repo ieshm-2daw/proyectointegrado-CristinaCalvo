@@ -2,14 +2,27 @@ from django.db import models
 from django.contrib.auth.models import AbstractUser
 from django.utils import timezone
 
+class Insignia(models.Model):
+    nombre = models.CharField(max_length=100)
+    descripcion = models.TextField()
+    icono = models.ImageField(upload_to='insignias/')
+
+class UsuarioInsignia(models.Model):
+    usuario = models.ForeignKey('Usuario', on_delete=models.CASCADE)
+    insignia = models.ForeignKey(Insignia, on_delete=models.CASCADE)
+    desbloqueada = models.BooleanField(default=False)
+
 class Usuario(AbstractUser):
     nombre = models.CharField(max_length=100) 
     saldo = models.DecimalField(max_digits=10, decimal_places=2, default=0, null=True)
     avatar = models.ImageField(upload_to='avatars/', default='avatars/perfil.png') 
     comentario = models.TextField(blank=True, null=True)
     baneado = models.BooleanField(default=False) 
-    
 
+    seguidores = models.ManyToManyField("self", symmetrical=False, related_name='usuarios_seguidores', blank=True)
+    seguidos = models.ManyToManyField("self", symmetrical=False, related_name='usuarios_seguidos', blank=True)
+    insignia_perfil = models.ForeignKey(UsuarioInsignia, null=True, blank=True, on_delete=models.SET_NULL, related_name='insignia_en_perfil')
+    
     def __str__(self):
         return self.username
 

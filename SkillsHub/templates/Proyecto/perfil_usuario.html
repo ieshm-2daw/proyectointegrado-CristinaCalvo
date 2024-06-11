@@ -6,19 +6,45 @@
 
         <div class="row">
             <div class="col-lg-3 col-md-4">
-                    <img src="{{ usuario.avatar.url }}" class="img-fluid rounded-circle mb-3" style="max-width: 200px;" alt="Avatar">
-            </div>
-            <div class="col-lg-9 col-md-8">
+                <img src="{{ usuario.avatar.url }}" class="img-fluid rounded-circle mb-3" style="max-width: 200px;" alt="Avatar">
                 {% if usuario.comentario %}
                     <p class="lead">{{ usuario.comentario }}</p>
                 {% else %}
                     <p class="lead">No hay información de este usuario</p>
                 {% endif %}
-                <a href="{% url 'iniciar_chat' usuario.id %}" class="btn btn-primary me-2">Iniciar Chat</a>
-                {% if usuario != request.user %}
-                    <a href="{% url 'reportar' usuario.id %}" class="btn btn-danger">Reportar</a>
+                {% if usuario.insignia_perfil %}
+                    <div>
+                        <img src="{{ usuario.insignia_perfil.insignia.icono.url }}" alt="{{ usuario.insignia_perfil.insignia.nombre }}" width="50" height="50">
+                        <span>{{ usuario.insignia_perfil.insignia.nombre }}</span>
+                    </div>
                 {% endif %}
-
+            </div>
+            <div class="col-lg-9 col-md-8 mt-4">
+                <div class="d-flex justify-content-center">
+                    <a href="{% url 'seguidos' usuario.id %}" class="m-2 d-flex flex-column align-items-center" style="text-decoration: none; color: inherit;">
+                        <span class="fw-bold">{{ usuario.usuarios_seguidos.count }}</span>
+                        <span>Seguidos</span>
+                    </a>
+                    <a href="{% url 'seguidores' usuario.id %}" class="m-2 d-flex flex-column align-items-center" style="text-decoration: none; color: inherit;">
+                        <span class="fw-bold">{{ usuario.usuarios_seguidores.count }}</span>
+                        Seguidores
+                    </a>
+                </div>
+                <div class="d-flex justify-content-center mt-3">
+                    {% if usuario == request.user %}
+                        <a href="{% url 'configura_perfil' %}" class="btn btn-primary me-1">Configuración</a>
+                        <a href="{% url 'lista_compras' %}" class="btn btn-secondary me-1">Compras</a> 
+                        <a href="{% url 'lista_insignias' %}" class="btn btn-secondary">Insignias</a> 
+                    {% else %}
+                        <a href="{% url 'iniciar_chat' usuario.id %}" class="btn btn-primary me-2">Iniciar Chat</a>
+                        <a href="{% url 'reportar' usuario.id %}" class="btn btn-danger me-2">Reportar</a>
+                        {% if request.user in usuario.usuarios_seguidores.all %}
+                            <a href="{% url 'dejar_de_seguir' usuario.id %}" class="btn btn-secondary">Seguido</a>
+                        {% else %}
+                            <a href="{% url 'seguir' usuario.id %}" class="btn btn-success">Seguir</a>
+                        {% endif %}
+                    {% endif %}
+                </div>
             </div>
         </div>
         <hr>
@@ -29,12 +55,13 @@
             <div class="col-lg-3 col-md-4">
                 <div class="card mb-4">
                     <img src="{{ servicio.imagen.url }}" class="card-img-top" alt="{{ servicio.nombre }}">
+                    <a href="{% url 'detalles' pk=servicio.pk %}" style="text-decoration: none; color: inherit;">
                     <div class="card-body">
                         <h5 class="card-title">{{ servicio.nombre }}</h5>
                         <p class="card-text">{{ servicio.descripcion }}</p>
                         <p class="card-text">Precio: {{ servicio.precio }}</p>
-                        <a href="{% url 'detalles' pk=servicio.pk %}" class="btn btn-primary">Ver detalles</a>
                     </div>
+                    </a>
                 </div>
             </div>
             {% empty %}
@@ -44,28 +71,6 @@
             {% endfor %}
         </div>
         <hr>
-
-        {% if compras_realizadas %}
-        <h2 class="mt-4">Mis compras</h2>
-        <div class="row">
-            {% for compra in compras_realizadas %}
-            <div class="col-lg-3 col-md-4 mb-4">
-                <div class="card">
-                    <div class="card-body">
-                        <a href="{% url 'detalles' pk=compra.servicio.pk %}" style="text-decoration: none; color: inherit;"><h5 class="card-title">{{ compra.servicio.nombre }}</h5>
-                        <p class="card-text">Precio: {{ compra.servicio.precio }}</p>
-                        <p class="card-text">Fecha de compra: {{ compra.fecha }}</p>
-                    </div>
-                </div>
-            </div>
-            {% endfor %}
-        </div>
-        <hr>
-        {% endif %}
-
-        {% if permitir_configuracion %}
-        <a href="{% url 'configura_perfil' %}" class="btn btn-primary me-2">Configuración</a>
-        {% endif %}
         
         <a href="{% url 'servicios' %}" class="btn btn-secondary">Volver a lista de servicios</a>
     </div>

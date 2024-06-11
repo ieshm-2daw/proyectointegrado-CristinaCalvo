@@ -1,23 +1,23 @@
 {% extends './base.html' %}
 
 {% block content %}
-    <div class="container mt-5">
-        <div class="d-flex justify-content-center card card-custom mx-auto">
+    <div class="container mt-5 mb-3">
+        <div class="card card-custom mx-auto">
             {% if servicio.imagen %}
                 <img src="{{ servicio.imagen.url }}" class="card-img-top" alt="{{ servicio.nombre }}">
             {% endif %}
             <div class="card-body">
                 <h2 class="card-title">{{ servicio.nombre }}</h2>
                 <p class="card-text">Precio: {{ servicio.precio }}€</p>
-                <p class="card-text">Descripcion: {{ servicio.descripcion }}</p>
+                <p class="card-text">Descripción: {{ servicio.descripcion }}</p>
                 <p class="card-text">Categoría: {{ servicio.categoria }}</p>
                 <p class="card-text">Ubicación: {{ servicio.ubicacion }}</p>
                 <p class="card-text">Activo: {% if servicio.activo %}Sí{% else %}No{% endif %}</p>
                 <p class="card-text">Subido por: <a href="{% url 'perfil_usuario' servicio.usuario.pk%}">{{ servicio.usuario }}</a></p>
             </div>
         </div>
-        <div class="mt-3 mx-auto text-center">
-            <div class="d-flex justify-content-center">
+        <div class="mt-3 text-center">
+            <div class="d-grid gap-2 d-md-flex justify-content-md-center">
                 {% if user.is_authenticated and user == servicio.usuario or user.is_superuser %}
                     <a href="{% url 'actualiza' pk=servicio.pk %}" class="btn btn-primary m-1">Actualizar servicio</a>
                     <a href="{% url 'borra' pk=servicio.pk %}" class="btn btn-danger m-1">Borrar servicio</a>
@@ -38,10 +38,9 @@
             </div>
             <br><br>
 
-           
             <div class="container">
                 <div class="row justify-content-center">
-                    <div class="col-md-6"> 
+                    <div class="col-md-8"> 
                         {% if existeValoracion %}
                             <div class="card card-custom">
                                 <div class="card-body">
@@ -69,8 +68,14 @@
 
     <style>
         .card-custom {
-            width: 600px; 
+            max-width: 600px; 
+            margin: auto;
         }
 
-        </style>
+        @media (max-width: 768px) {
+            .card-custom {
+                max-width: 100%;
+            }
+        }
+    </style>
 {% endblock %}

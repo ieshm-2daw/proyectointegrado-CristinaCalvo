@@ -13,7 +13,7 @@
             padding: 0;
         }
         
-        .container {
+        .gestion {
             max-width: 800px;
             margin: 50px auto;
             padding: 20px;
@@ -45,12 +45,13 @@
     </style>
 </head>
 <body>
-    <div class="container">
+    <div class="container gestion">
         <h1>Panel de Gestión</h1>
         <div class="btn-container">
             <a href="{% url 'top_vendedores' %}" class="btn btn-secondary">Top Vendedores</a>
             <a href="{% url 'top_compradores' %}" class="btn btn-secondary">Top Compradores</a>
             <a href="{% url 'lista_reportes' %}" class="btn btn-secondary">Lista de Reportes</a>
+            <a href="{% url 'lista_usuarios' %}" class="btn btn-secondary">Usuarios</a>
         </div>
     </div>
 </body>

@@ -1,5 +1,5 @@
 from django.shortcuts import render,  get_object_or_404, redirect
-from .models import Usuario, Compra, Servicio, Room, Mensaje, Reporte, Ubicacion
+from .models import Usuario, Compra, Servicio, Room, Mensaje, Reporte, Ubicacion, UsuarioInsignia, Insignia
 from django.views import View
 from django.views.generic import ListView, DetailView
 from .forms import ServicioForm, ValoracionForm, RegisterForm, PerfilForm, FiltroCategoria, FiltroUbicacion, ReporteForm
@@ -14,7 +14,6 @@ from django.db import models
 from django.contrib.auth.decorators import login_required
 from django.http import HttpResponseRedirect, JsonResponse
 from django.db.models import Q
-from datetime import timedelta
 
 
 # Create your views here.
@@ -234,15 +233,41 @@ class PerfilUsuario(LoginRequiredMixin, View):
             permitir_configuracion = False
             compras_realizadas = None
 
+        seguidores = usuario.usuarios_seguidores.all()
+        seguidos = usuario.usuarios_seguidos.all()
+
         context = {
             'usuario': usuario,
             'servicios': servicios,
             'compras_realizadas': compras_realizadas,
             'permitir_configuracion': permitir_configuracion,
+            'seguidores': seguidores,
+            'seguidos': seguidos,
         }
         return render(request, self.template_name, context)
     
+def seguir_usuario(request, pk):
+    usuario_a_seguir = get_object_or_404(Usuario, pk=pk)
+    request.user.usuarios_seguidos.add(usuario_a_seguir)
+    usuario_a_seguir.usuarios_seguidores.add(request.user)
+    return redirect('perfil_usuario', pk=pk)
 
+def dejar_de_seguir_usuario(request, pk):
+    usuario_a_dejar_de_seguir = get_object_or_404(Usuario, pk=pk)
+    request.user.usuarios_seguidos.remove(usuario_a_dejar_de_seguir)
+    usuario_a_dejar_de_seguir.usuarios_seguidores.remove(request.user)
+    return redirect('perfil_usuario', pk=pk)
+
+def lista_seguidores(request, pk):
+    usuario = get_object_or_404(Usuario, pk=pk)
+    seguidores = usuario.usuarios_seguidores.all()
+    return render(request, 'Proyecto/seguidores.html', {'usuario': usuario, 'seguidores': seguidores})
+
+def lista_seguidos(request, pk):
+    usuario = get_object_or_404(Usuario, pk=pk)
+    seguidos= usuario.usuarios_seguidos.all()
+    return render(request, 'Proyecto/seguidos.html', {'usuario': usuario, 'seguidos': seguidos})
+    
 
 def buscar_usuario(request):
     nombre_usuario = request.GET.get('nombre_usuario')
@@ -326,16 +351,27 @@ def iniciar_chat(request, user_id): #para habalr con el usuario actual al de pfu
 
 
 #BANEO DE USUARIO
-def banear_usuario(usuario, dias):
+def banear_usuario(usuario):
     usuario.baneado = True
-    usuario.fecha_desbaneo = timezone.now() + timedelta(days=dias)
     usuario.save()
 
 def desbanear_usuario(usuario):
     usuario.baneado = False
-    usuario.fecha_desbaneo = None
     usuario.save()
 
+def lista_usuarios(request):
+    if request.method == 'POST':
+        user_id = request.POST.get('user_id')
+        action = request.POST.get('action')
+        usuario = get_object_or_404(Usuario, id=user_id)
+        if action == 'banear':
+            banear_usuario(usuario)  
+        elif action == 'desbanear':
+            desbanear_usuario(usuario)  # Desbanea al usuario
+        return redirect('lista_usuarios')  # Redirige a la lista de usuarios después de banear/desbanear
+    
+    usuarios = Usuario.objects.all()  # Obtén todos los usuarios
+    return render(request, 'Proyecto/lista_usuarios.html', {'usuarios': usuarios})
 
 def reportar_usuario(request, user_id):
     usuario_reportado = get_object_or_404(Usuario, pk=user_id)
@@ -391,3 +427,71 @@ class BanMiddleware:
 
 def error(request):
     return render(request, 'Proyecto/error.html')
+
+
+def lista_compras(request):
+    compras = Compra.objects.filter(usuario_comprador=request.user).order_by('-fecha')
+    return render(request, 'Proyecto/lista_compras.html', {'compras': compras})
+
+
+def lista_insignias(request):
+    usuario = request.user
+    
+    insignias = [
+        {
+            "nombre": "Dos compras en un día",
+            "descripcion": "Te han comprado dos veces en el mismo día.",
+            "icono": "insignias/dos_compras_dia.png",
+            "condicion": lambda u: Compra.objects.filter(usuario_vendedor=u, fecha__date=timezone.now().date()).count() >= 2
+        },
+        {
+            "nombre": "Primera venta",
+            "descripcion": "Has realizado tu primera venta.",
+            "icono": "insignias/primera_venta.png",
+            "condicion": lambda u: Compra.objects.filter(usuario_vendedor=u).exists()
+        },
+        {
+            "nombre": "Diez servicios diferentes vendidos",
+            "descripcion": "Has vendido diez servicios diferentes.",
+            "icono": "insignias/diez_servicios_vendidos.png",
+            "condicion": lambda u: Compra.objects.filter(usuario_vendedor=u).values('servicio').distinct().count() >= 10
+        },
+        {
+            "nombre": "Primera valoración de 5 estrellas",
+            "descripcion": "Has recibido tu primera valoración de 5 estrellas.",
+            "icono": "insignias/primera_valoracion_cinco_estrellas.png",
+            "condicion": lambda u: Compra.objects.filter(usuario_vendedor=u, valoracion=5).exists()
+        },
+        {
+            "nombre": "Primera compra",
+            "descripcion": "Has realizado tu primera compra.",
+            "icono": "insignias/primera_compra.png",
+            "condicion": lambda u: Compra.objects.filter(usuario_comprador=u).exists()
+        },
+    ]
+
+    # Asignar insignias al usuario
+    for insignia_data in insignias:
+        if insignia_data["condicion"](usuario):
+            insignia, created = Insignia.objects.get_or_create(
+                nombre=insignia_data["nombre"],
+                defaults={
+                    "descripcion": insignia_data["descripcion"],
+                    "icono": insignia_data["icono"]
+                }
+            )
+            UsuarioInsignia.objects.get_or_create(usuario=usuario, insignia=insignia, defaults={"desbloqueada": True})
+
+    insignias_desbloqueadas = UsuarioInsignia.objects.filter(usuario=usuario, desbloqueada=True)
+    
+    return render(request, 'Proyecto/lista_insignias.html', {'insignias': insignias_desbloqueadas})
+
+def seleccionar_insignia_perfil(request, insignia_id):
+    usuario = request.user
+    insignia = get_object_or_404(UsuarioInsignia, id=insignia_id, usuario=usuario)
+    
+    usuario.insignia_perfil = insignia
+    usuario.save()
+    
+    messages.success(request, 'Insignia seleccionada para mostrar en tu perfil.')
+    return redirect(reverse('perfil_usuario', kwargs={'pk': usuario.pk}))

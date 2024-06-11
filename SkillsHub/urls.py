@@ -1,6 +1,6 @@
 from django.urls import path
 from . import views
-from .views import Servicios, ServicioNuevo, Detalles, Actualiza, Borra, RealizarCompra, Valoraciones, PerfilUsuario
+from .views import Servicios, ServicioNuevo, Detalles, Actualiza, Borra, RealizarCompra, Valoraciones, PerfilUsuario, lista_insignias
 from django.contrib.auth.decorators import login_required
 from django.contrib.admin.views.decorators import staff_member_required
 
@@ -27,7 +27,8 @@ urlpatterns = [
     path('gestion/', views.gestion, name='gestion'),
     path('top-vendedores/', staff_member_required(views.top_vendedores), name='top_vendedores'),
     path('top-compradores/', staff_member_required(views.top_compradores), name='top_compradores'),
-    path('lista-reportes/', views.lista_reportes, name='lista_reportes'),
+    path('lista-reportes/', staff_member_required(views.lista_reportes), name='lista_reportes'),
+    path('lista_usuarios/', staff_member_required(views.lista_usuarios), name='lista_usuarios'),
 
     path('rooms',  login_required(views.room), name="rooms"),
 
@@ -37,5 +38,14 @@ urlpatterns = [
 
     path('reportar/<int:user_id>/', login_required(views.reportar_usuario), name='reportar'),
     path('error/', views.error, name='error'),
+
+    path('seguir/<int:pk>/', views.seguir_usuario, name='seguir'),
+    path('dejar_de_seguir/<int:pk>/', views.dejar_de_seguir_usuario, name='dejar_de_seguir'),
+    path('seguidores/<int:pk>/', views.lista_seguidores, name='seguidores'),
+    path('seguidos/<int:pk>/', views.lista_seguidos, name='seguidos'),
+
+    path('lista_compras', login_required(views.lista_compras), name='lista_compras'),
+    path('insignias/', login_required(views.lista_insignias), name='lista_insignias'),
+    path('seleccionar_insignia_perfil/<int:insignia_id>/', login_required(views.seleccionar_insignia_perfil), name='seleccionar_insignia_perfil'),
     
 ]

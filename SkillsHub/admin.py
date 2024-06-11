@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Usuario, Servicio, Compra, Ubicacion, Room, Mensaje, Reporte
+from .models import Usuario, Servicio, Compra, Ubicacion, Room, Mensaje, Reporte, Insignia
 from django.contrib.auth.admin import UserAdmin
 
 class CustomUserAdmin(UserAdmin):
@@ -22,3 +22,4 @@ admin.site.register(Ubicacion)
 admin.site.register(Room)
 admin.site.register(Mensaje)
 admin.site.register(Reporte)
+admin.site.register(Insignia)

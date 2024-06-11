@@ -1,0 +1,21 @@
+{% extends './base.html' %}
+
+{% block content %}
+    <div class="container mt-4">
+        <h1 class="mb-4">Mis Compras</h1>
+
+        <div class="list-group">
+            {% for compra in compras %}
+                <div class="list-group-item mb-3">
+                    <h5 class="mb-1">{{ compra.servicio.nombre }}</h5>
+                    <p class="mb-1">Fecha: {{ compra.fecha }}</p>
+                    <p class="mb-1">Valoración: {{ compra.valoracion }}</p>
+                    <p class="mb-1">Puntuación: {{ compra.puntuacion }}</p>
+                    <p class="mb-1">Vendedor: {{ compra.usuario_vendedor }}</p>
+                </div>
+            {% empty %}
+                <p class="text-muted">No tienes compras realizadas.</p>
+            {% endfor %}
+        </div>
+    </div>
+{% endblock %}
