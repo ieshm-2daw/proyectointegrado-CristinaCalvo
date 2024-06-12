@@ -36,11 +36,10 @@ CORS_ALLOWED_ORIGINS = [
     'http://127.0.0.1:8000/'
 ]
 
-# Define los orígenes CSRF confiables
 CSRF_TRUSTED_ORIGINS = [
     'https://proyectointegrado-cristinacalvo.onrender.com',
     'http://127.0.0.1:8000/',
-    # Agrega aquí cualquier otro origen confiable si es necesario
+    
 ]
 
 # Application definition

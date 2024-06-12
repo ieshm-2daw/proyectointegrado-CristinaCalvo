@@ -126,7 +126,7 @@
 
     <script>
         const roomSlug = "{{ room.slug }}";
-        const chatSocket = new WebSocket("ws://" + window.location.host + "/chat/" + roomSlug + "/");
+        const chatSocket = new WebSocket("wss://" + window.location.host + "/chat/" + roomSlug + "/");
         chatSocket.onopen = function (e) {
             console.log("La conexión se estableció correctamente!");
         };
