@@ -46,6 +46,5 @@ urlpatterns = [
 
     path('lista_compras', login_required(views.lista_compras), name='lista_compras'),
     path('insignias/', login_required(views.lista_insignias), name='lista_insignias'),
-    path('seleccionar_insignia_perfil/<int:insignia_id>/', login_required(views.seleccionar_insignia_perfil), name='seleccionar_insignia_perfil'),
-    
+    path('seleccionar_insignia_perfil/<int:insignia_id>/', login_required(views.seleccionar_insignia_perfil), name='seleccionar_insignia_perfil'),  
 ]
