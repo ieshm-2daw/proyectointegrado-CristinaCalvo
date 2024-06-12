@@ -29,9 +29,7 @@ SECRET_KEY = 'django-insecure-*6_$o!5@d0&ha7n(5uzaxg*xgek_lkej%o%@a+%fqiebjxid7z
 DEBUG = True
 
 PORT = 8000 
-BASE_URL = f"https://proyectointegrado-cristinacalvo.onrender.com"
-ALLOWED_HOSTS = ['*']
-
+ALLOWED_HOSTS = ['localhost', 'proyectointegrado-cristinacalvo.onrender.com']
 
 # Application definition
 
