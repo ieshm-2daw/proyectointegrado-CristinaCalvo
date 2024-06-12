@@ -41,6 +41,12 @@ class Ubicacion(models.Model):
 
     def __str__(self):
         return self.nombre
+    
+class Categoria(models.Model):
+    nombre = models.CharField(max_length=100)
+
+    def __str__(self):
+        return self.nombre
 
 class Servicio(models.Model):
     nombre = models.CharField(max_length=100)
@@ -49,7 +55,7 @@ class Servicio(models.Model):
     ubicacion = models.ForeignKey(Ubicacion, on_delete=models.CASCADE)
     usuario = models.ForeignKey(Usuario, on_delete=models.CASCADE)
     activo = models.BooleanField(default=True)
-    categoria = models.CharField(max_length=255, blank=True, null=True) 
+    categoria = models.ForeignKey(Categoria, on_delete=models.CASCADE)
     imagen = models.ImageField(upload_to='servicio/', blank=False, default='servicio/blanco.jpeg')
 
     def __str__(self):
@@ -79,4 +85,4 @@ class Mensaje(models.Model):
     content=models.TextField()
     usuario=models.ForeignKey(Usuario,on_delete=models.CASCADE)
     room=models.ForeignKey(Room,on_delete=models.CASCADE)
-    created_on=models.DateTimeField(auto_now_add=True)
+    created_on=models.DateTimeField(default=timezone.now) 

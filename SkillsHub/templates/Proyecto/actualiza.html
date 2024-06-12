@@ -1,7 +1,7 @@
 {% extends './base.html' %}
 
 {% block content %}
-<div class="container-fluid mt-5">
+<div class="container mt-5">
     <h1 class="display-4">Actualizar Servicio</h1>
 
     <div class="card mb-3">
@@ -12,29 +12,39 @@
                     <div class="col-12">
                         <div class="form-group m-3">
                             <label for="id_nombre">Nombre</label>
-                            <input type="text" class="form-control" id="id_nombre" name="nombre" placeholder="Nombre" value="{{ servicio.nombre }}">
+                            <input type="text" class="form-control" id="id_nombre" name="nombre" placeholder="Nombre" pattern="[A-Za-z][A-Za-z ]*" value="{{ servicio.nombre }}" required oninput="validarFormulario()">
+                            <div class="invalid-feedback">El nombre debe comenzar con una letra y no debe contener caracteres especiales o números.</div>
                         </div>
                         <div class="form-group m-3">
                             <label for="id_precio">Precio</label>
-                            <input type="number" class="form-control" id="id_precio" name="precio" placeholder="Precio" value="{{ servicio.precio|stringformat:"s" }}">
+                            <input type="number" class="form-control" id="id_precio" name="precio" placeholder="Precio" value="{{ servicio.precio|stringformat:"s" }}" required min="0" step="0.01" oninput="validarFormulario()">
+                            <div class="invalid-feedback">El precio debe ser un número mayor que cero.</div>
                         </div> 
                         <div class="form-group m-3">
                             <label for="id_descripcion">Descripción</label>
-                            <textarea class="form-control" id="id_descripcion" name="descripcion" rows="3" placeholder="Descripción">{{ servicio.descripcion }}</textarea>
+                            <textarea class="form-control" id="id_descripcion" name="descripcion" rows="3" placeholder="Descripción" required oninput="validarFormulario()">{{ servicio.descripcion }}</textarea>
+                            <div class="invalid-feedback">La descripción no debe contener caracteres especiales.</div>
                         </div>
                         <div class="form-group m-3">
                             <label for="id_categoria">Categoría</label>
-                            <input type="text" class="form-control" id="id_categoria" name="categoria" placeholder="Categoría" value="{{ servicio.categoria }}">
+                            <select class="form-control" id="id_categoria" name="categoria" required>
+                                <option value="{{ servicio.categoria.id }}" selected>{{ servicio.categoria.nombre }}</option>
+                                {% for categoria in categorias %}
+                                    <option value="{{ categoria.id }}">{{ categoria.nombre }}</option>
+                                {% endfor %}
+                            </select>
                         </div>
+
                         <div class="form-group m-3">
                             <label for="id_ubicacion">Ubicación</label>
-                            <select class="form-control" id="id_ubicacion" name="ubicacion">
+                            <select class="form-control" id="id_ubicacion" name="ubicacion" required>
                                 <option value="{{ servicio.ubicacion.id }}" selected>{{ servicio.ubicacion.nombre }}</option>
                                 {% for ubicacion in ubicaciones %}
                                     <option value="{{ ubicacion.id }}">{{ ubicacion.nombre }}</option>
                                 {% endfor %}
                             </select>
                         </div>
+                        
                         <div class="form-group m-3">
                             <label for="id_activo">Activo</label>
                             <input type="checkbox" class="form-check-input" id="id_activo" name="activo" {% if servicio.activo %}checked{% endif %}>
@@ -42,7 +52,7 @@
                         </div>
                         <div class="form-group m-3">
                             <label for="id_imagen">Imagen</label>
-                            <input type="file" class="form-control-file" id="id_imagen" name="imagen">
+                            <input type="file" class="form-control-file w-100" id="id_imagen" name="imagen">
                             {% if servicio.imagen %}
                                 <img src="{{ servicio.imagen.url }}" alt="Imagen" class="mt-2" style="max-width: 150px;">
                             {% endif %}
@@ -51,11 +61,53 @@
                 </div>
                 <div class="row">
                     <div class="col-12 text-center">
-                        <button type="submit" class="btn btn-success">Actualizar</button>
+                        <button type="submit" class="btn btn-success" id="botonActualizar">Actualizar</button>
                     </div>
                 </div>
             </form>
         </div>
     </div>
+
+    <script>
+        function validarCampo(campo, expresionRegular, mensajeError) {
+            var valorCampo = campo.value;
+            var expresion = new RegExp(expresionRegular);
+    
+            if (!expresion.test(valorCampo)) {
+                campo.setCustomValidity(mensajeError);
+                campo.classList.add('is-invalid');
+                return false;
+            } else {
+                campo.setCustomValidity('');
+                campo.classList.remove('is-invalid');
+                return true;
+            }
+        }
+    
+        function validarFormulario() {
+            var nombreValido = validarCampo(
+                document.getElementById('id_nombre'), 
+                '^[A-Za-z][A-Za-z ]*$', 
+                'El nombre debe comenzar con una letra y no debe contener caracteres especiales o números.'
+            );
+            var precioValido = validarCampo(
+                document.getElementById('id_precio'), 
+                '^[0-9]+(?:\\.[0-9]{1,2})?$', 
+                'El precio debe ser un número mayor que cero.'
+            );
+            var descripcionValida = validarCampo(
+                document.getElementById('id_descripcion'), 
+                '^[A-Za-z0-9 .,]*$', 
+                'La descripción no debe contener caracteres especiales.'
+            );
+    
+            var botonActualizar = document.getElementById('botonActualizar');
+            botonActualizar.disabled = !(nombreValido && precioValido && descripcionValida);
+        }
+    
+        document.addEventListener('DOMContentLoaded', function() {
+            validarFormulario();
+        });
+    </script>
 </div>
 {% endblock %}

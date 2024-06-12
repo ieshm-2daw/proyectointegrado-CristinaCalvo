@@ -6,23 +6,31 @@
 
     <div class="card">
         <div class="card-body">
-            <form method="post" action="{% url 'nuevo_servicio' %}" enctype="multipart/form-data">
+            <form method="post" action="{% url 'nuevo_servicio' %}" enctype="multipart/form-data" oninput="validarFormulario()">
                 {% csrf_token %}
                 <div class="form-group m-3">
                     <label for="id_nombre">Nombre</label>
-                    <input type="text" class="form-control" id="id_nombre" name="nombre" placeholder="Nombre" required>
+                    <input type="text" class="form-control" id="id_nombre" name="nombre" placeholder="Nombre" required pattern="[A-Za-z][A-Za-z ]*">
+                    <div class="invalid-feedback">El nombre debe comenzar con una letra y no debe contener caracteres especiales.</div>
                 </div>
                 <div class="form-group m-3">
                     <label for="id_precio">Precio</label>
-                    <input type="number" class="form-control" id="id_precio" name="precio" placeholder="Precio" required>
+                    <input type="number" class="form-control" id="id_precio" name="precio" placeholder="Precio" required min="0" step="0.01">
+                    <div class="invalid-feedback">El precio debe ser un número mayor que cero.</div>
                 </div>
                 <div class="form-group m-3">
                     <label for="id_descripcion">Descripción</label>
-                    <textarea class="form-control" id="id_descripcion" name="descripcion" rows="3" placeholder="Descripción" required></textarea>
+                    <textarea class="form-control" id="id_descripcion" name="descripcion" rows="3" placeholder="Descripción" required pattern="[A-Za-z][A-Za-z ]*"></textarea>
+                    <div class="invalid-feedback">La descripción no debe contener caracteres especiales.</div>
                 </div>
                 <div class="form-group m-3">
                     <label for="id_categoria">Categoría</label>
-                    <input type="text" class="form-control" id="id_categoria" name="categoria" placeholder="Categoría" required>
+                    <select class="form-control" id="id_categoria" name="categoria" required>
+                        <option value="" selected>Seleccione una categoría</option>
+                        {% for categoria in categorias %}
+                            <option value="{{ categoria.id }}">{{ categoria.nombre }}</option>
+                        {% endfor %}
+                    </select>
                 </div>
                 <div class="form-group m-3">
                     <label for="id_ubicacion">Ubicación</label>
@@ -40,11 +48,46 @@
                 </div>
                 <div class="form-group m-3">
                     <label for="id_imagen">Imagen</label>
-                    <input type="file" class="form-control-file" id="id_imagen" name="imagen">
+                    <input type="file" class="form-control-file w-100" id="id_imagen">
                 </div>
-                <button type="submit" class="btn btn-success">Publicar</button>
+                <div class="row">
+                    <div class="col-12 text-center">
+                        <button type="submit" class="btn btn-success" id="botonPublicar">Publicar</button>
+                    </div>
+                </div>
             </form>
         </div>
     </div>
+
+    <script>
+        function validarCampo(campo, expresionRegular) {
+            var valorCampo = campo.value;
+            var expresion = new RegExp(expresionRegular);
+
+            if (valorCampo.trim() !== '' && !expresion.test(valorCampo)) {
+                campo.setCustomValidity("Inválido");
+                campo.classList.add('is-invalid');
+                return false;
+            } else {
+                campo.setCustomValidity('');
+                campo.classList.remove('is-invalid');
+                return true;
+            }
+        }
+
+        function validarFormulario() {
+            var nombreValido = validarCampo(document.getElementById('id_nombre'), '^[A-Za-z][A-Za-z ]*$');
+            var precioValido = validarCampo(document.getElementById('id_precio'), '^[0-9]+(\\.[0-9]{1,2})?$');
+            var descripcionValida = validarCampo(document.getElementById('id_descripcion'), '^[A-Za-z0-9 .,]*$');
+
+            var botonPublicar = document.getElementById('botonPublicar');
+            botonPublicar.disabled = !(nombreValido && precioValido && descripcionValida);
+        }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            validarFormulario();
+        });
+    </script>
+
 </div>
 {% endblock %}

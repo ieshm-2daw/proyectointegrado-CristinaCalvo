@@ -2,15 +2,15 @@
 
 {% block content %}
 <div class="container mt-5">
-    <div class="card">
+    <div class="card shadow-sm">
         <div class="card-body">
             <h1 class="display-4">Valorar {{ compra.servicio.nombre }}</h1>
 
-            <form method="post" enctype="multipart/form-data" required>
+            <form method="post" enctype="multipart/form-data">
                 {% csrf_token %}
-                <div class="form-group" required>
+                <div class="form-group mt-3">
                     <label for="id_valoracion">Valoración</label>
-                    <textarea class="form-control" id="id_valoracion" name="valoracion" rows="3" placeholder="Ingresa tu valoración">{{ user.compras_realizadas.first.valoracion }}</textarea>
+                    <textarea class="form-control" id="id_valoracion" name="valoracion" rows="3" placeholder="Ingresa tu valoración">{{ user.compras_realizadas.first.valoracion|default_if_none:"" }}</textarea>
                 </div>
                 <div class="form-group mt-2" required>
                     <label for="id_puntuacion">Puntuación</label>
@@ -23,8 +23,8 @@
                         <option value="5" {% if user.compras_realizadas.first.puntuacion == 5 %} selected {% endif %}>5</option>
                     </select>
                 </div>
-                <button type="submit" class="btn btn-success mt-2">Publicar</button>
-                <a href="{% url 'detalles' pk=compra.servicio.pk %}" class="btn btn-danger mt-2">Cancelar</a>
+                <button type="submit" class="btn btn-success mt-4">Publicar</button>
+                <a href="{% url 'detalles' pk=compra.servicio.pk %}" class="btn btn-danger mt-4">Cancelar</a>
             </form>
         </div>
     </div>

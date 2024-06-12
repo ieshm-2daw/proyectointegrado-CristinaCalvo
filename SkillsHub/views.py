@@ -1,5 +1,5 @@
 from django.shortcuts import render,  get_object_or_404, redirect
-from .models import Usuario, Compra, Servicio, Room, Mensaje, Reporte, Ubicacion, UsuarioInsignia, Insignia
+from .models import Usuario, Compra, Servicio, Room, Mensaje, Reporte, Ubicacion, UsuarioInsignia, Insignia, Categoria
 from django.views import View
 from django.views.generic import ListView, DetailView
 from .forms import ServicioForm, ValoracionForm, RegisterForm, PerfilForm, FiltroCategoria, FiltroUbicacion, ReporteForm
@@ -27,7 +27,7 @@ class Servicios(ListView):
     def get_queryset(self):
         queryset = Servicio.objects.filter(activo=True)
         categoria = self.request.GET.get('categorias', None)
-        ubicacion = self.request.GET.get('ubicacion', None)  # Valor de ubicacion
+        ubicacion = self.request.GET.get('ubicacion', None)  
 
         if categoria:
             queryset = queryset.filter(categoria=categoria)
@@ -55,6 +55,7 @@ class ServicioNuevo(CreateView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
+        context['categorias'] = Categoria.objects.all()
         context['ubicaciones'] = Ubicacion.objects.all()  # Obtener todas las ubicaciones disponibles
         return context
 
@@ -294,10 +295,14 @@ def top_compradores(request):
 # MENSAJERIA
 def room(request):
     current_user = request.user
-    rooms = Room.objects.filter(usuarios=current_user) #que solo te salgan los chats de el usuario actual
+    rooms = Room.objects.filter(usuarios=current_user) # que solo te salgan los chats del usuario actual
     for room in rooms:
         otro = room.usuarios.exclude(username=current_user.username).first()
-        room.otro_usuario = otro.username if otro else "Otro" #para asignar nombres de la sala con otro usuario
+        room.otro_usuario = otro if otro else None # incluir el objeto completo del otro usuario en el contexto
+        
+        ultimo_mensaje = Mensaje.objects.filter(room=room).order_by('-created_on').first()
+        room.ultimo_mensaje = ultimo_mensaje if ultimo_mensaje else "No hay mensajes"
+
     return render(request, "Proyecto/rooms.html", {'rooms': rooms})
 
 
@@ -307,6 +312,9 @@ def chatPage(request, slug):
     
     current_user = request.user
     otro = room.usuarios.exclude(username=current_user.username).first() #Para obtener al otro usuario
+
+    for mensaje in mensajes:
+        print(f"Mensaje: {mensaje.content}, Hora: {mensaje.created_on}")
     
     contexto = {
         "room": room,
@@ -442,7 +450,7 @@ def lista_insignias(request):
             "nombre": "Dos compras en un día",
             "descripcion": "Te han comprado dos veces en el mismo día.",
             "icono": "insignias/dos_compras_dia.png",
-            "condicion": lambda u: Compra.objects.filter(usuario_vendedor=u, fecha__date=timezone.now().date()).count() >= 2
+            "condicion": lambda u: Compra.objects.filter(usuario_comprador=u, fecha__date=timezone.now().date()).count() >= 2
         },
         {
             "nombre": "Primera venta",
@@ -460,7 +468,7 @@ def lista_insignias(request):
             "nombre": "Primera valoración de 5 estrellas",
             "descripcion": "Has recibido tu primera valoración de 5 estrellas.",
             "icono": "insignias/primera_valoracion_cinco_estrellas.png",
-            "condicion": lambda u: Compra.objects.filter(usuario_vendedor=u, valoracion=5).exists()
+            "condicion": lambda u: Compra.objects.filter(usuario_vendedor=u, puntuacion=5).exists()
         },
         {
             "nombre": "Primera compra",
@@ -470,7 +478,6 @@ def lista_insignias(request):
         },
     ]
 
-    # Asignar insignias al usuario
     for insignia_data in insignias:
         if insignia_data["condicion"](usuario):
             insignia, created = Insignia.objects.get_or_create(

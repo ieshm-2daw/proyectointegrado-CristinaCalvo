@@ -28,6 +28,8 @@ SECRET_KEY = 'django-insecure-*6_$o!5@d0&ha7n(5uzaxg*xgek_lkej%o%@a+%fqiebjxid7z
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
+PORT = 8000 
+BASE_URL = f"https://proyectointegrado-cristinacalvo.onrender.com"
 ALLOWED_HOSTS = ['*']
 
 
@@ -120,7 +122,7 @@ USE_I18N = True
 
 USE_L10N = True
 
-USE_TZ = True
+USE_TZ = False
 
 
 # Static files (CSS, JavaScript, Images)

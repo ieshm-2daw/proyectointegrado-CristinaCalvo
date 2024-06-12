@@ -2,6 +2,12 @@
 {% block content %}
 {% load static %}
 <div class="container mt-4">
+    <style>
+        small {
+            float: right;
+            margin-left: 10%;
+        }
+    </style>
     <h2 class="text-center mb-4">Chats</h2>
 
     {% if rooms %}
@@ -10,9 +16,13 @@
         <div class="col-md-4 mb-3">
             <div class="card">
                 <div class="card-body">
-                    <h5 class="card-title">Chat con {{ room.otro_usuario }}</h5>
-
-                    <a href="{% url 'chat' room.slug %}" class="btn btn-primary btn-enter-room">Enviar Mensaje</a>
+                    <a href="{% url 'chat' room.slug %}" style="text-decoration: none; color: inherit;">
+                        <h5 class="card-title">
+                            <img src="{{ room.otro_usuario.avatar.url }}" alt="Avatar" style="max-width: 50px; border-radius: 50%;">
+                            {{ room.otro_usuario }}
+                        </h5>
+                        <p class="mt-1">Último mensaje: {{ room.ultimo_mensaje.content }} <small>{{ room.ultimo_mensaje.created_on|date:"H:i" }}</small></p>
+                    </a>
                 </div>
             </div>
         </div>

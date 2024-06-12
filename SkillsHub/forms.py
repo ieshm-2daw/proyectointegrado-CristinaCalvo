@@ -1,5 +1,5 @@
 from django import forms
-from .models import Servicio, Usuario, Compra, Ubicacion, Reporte
+from .models import Servicio, Usuario, Compra, Ubicacion, Reporte, Categoria
 from django.contrib.auth.forms import UserCreationForm
 
 class ServicioForm(forms.ModelForm):
@@ -24,15 +24,7 @@ class PerfilForm(forms.ModelForm):
       fields = ['saldo', 'comentario', 'avatar']
       
 class FiltroCategoria(forms.Form):
-    categorias = forms.ChoiceField(choices=[], required=False, label='Categoría')
-
-    def __init__(self, *args, **kwargs):
-        super(FiltroCategoria, self).__init__(*args, **kwargs)
-        categorias = Servicio.objects.values_list('categoria', flat=True).distinct()
-        choices = [(c, c) for c in categorias]
-        choices.insert(0, ('', 'Categoría'))
-        self.fields['categorias'].choices = choices
-
+    categoria = forms.ModelChoiceField(queryset=Categoria.objects.all(), empty_label="Categoría", required=False)
 
 class FiltroUbicacion(forms.Form):
     ubicacion = forms.ModelChoiceField(queryset=Ubicacion.objects.all(), empty_label="Ubicación", required=False)

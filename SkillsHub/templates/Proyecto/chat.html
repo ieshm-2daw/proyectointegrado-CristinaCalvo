@@ -69,6 +69,8 @@
         }
 
         input[type="text"] {
+            position: sticky;
+            z-index: 1; 
             width: calc(100% - 100px);
             padding: 10px;
             border-radius: 5px 0 0 5px;
@@ -78,6 +80,8 @@
         }
 
         button {
+            position: sticky; 
+            z-index: 1;
             padding: 10px 25px;
             border-radius: 0 5px 5px 0;
             border: none;
@@ -85,6 +89,10 @@
             color: #fff;
             font-size: 16px;
             cursor: pointer;
+        }
+        .message-content small {
+            float: right;
+            margin-left: 10%;
         }
     </style>
 </head>
@@ -99,11 +107,12 @@
                 {% for mensaje in mensajes %}
                     {% if mensaje.usuario.username == request.user.username %}
                         <div class="message mine">
-                            <p class="message-content">{{ mensaje.content }}</p>
+                            <p class="message-content">{{ mensaje.content }}<small>{{ mensaje.created_on|date:"H:i" }}</small></p>
                         </div>
                     {% else %}
                         <div class="message other">
-                            <p class="message-content">{{ mensaje.content }}</p>
+                            <p class="message-content">{{ mensaje.content }}<small>{{ mensaje.created_on|date:"H:i" }}</small></p>
+                           
                         </div>
                     {% endif %}
                 {% endfor %}
@@ -134,12 +143,13 @@
         chatSocket.onmessage = function (e) {
             const data = JSON.parse(e.data);
             var div = document.createElement("div");
+            var time = data.time;
             if (data.username === "{{ request.user.username }}") {
                 div.classList.add("message", "mine");
             } else {
                 div.classList.add("message", "other");
             }
-            div.innerHTML = `<p class="message-content">${data.message}</p>`;
+            div.innerHTML = `<p class="message-content">${data.message}<small>${data.time}</small></p>`;
             document.querySelector("#id_chat_item_container").appendChild(div);
         };
     </script>

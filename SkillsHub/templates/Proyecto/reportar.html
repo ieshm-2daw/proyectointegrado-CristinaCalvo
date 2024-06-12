@@ -1,20 +1,50 @@
 {% extends './base.html'%}
 {% block content %}
-<!DOCTYPE html>
-<html lang="es">
-<head>
-    <meta charset="UTF-8">
-    <title>Reportar Usuario</title>
-</head>
-<body>
-    <h1>Reportar Usuario</h1>
-    <p>Estás reportando a {{ usuario_reportado }}</p>
-    <form action="" method="POST">
-        {% csrf_token %}
-        <textarea name="motivo" rows="4" cols="50" placeholder="Describe el motivo del reporte"></textarea>
-        <br>
-        <button type="submit" class="btn btn-danger mt-3">Reportar</button>
-    </form>
-</body>
-</html>
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card">
+                <div class="card-header">
+                    <h1 class="card-title">Reportar Usuario</h1>
+                </div>
+                <div class="card-body">
+                    <p>Estás reportando a {{ usuario_reportado }}</p>
+                    <form action="" method="POST" oninput="validarFormulario()">
+                        {% csrf_token %}
+                        <div class="form-group">
+                            <label for="id_motivo">Motivo del reporte</label>
+                            <textarea name="motivo" id="id_motivo" rows="4" class="form-control" placeholder="Describe el motivo del reporte" required oninput="validarCampo(this, '^[A-Za-z0-9 .,]*$', 'El motivo no debe contener caracteres especiales.')"></textarea>
+                            <div class="invalid-feedback">El motivo no debe contener caracteres especiales.</div>
+                        </div>
+                        <button type="submit" class="btn btn-danger mt-3" id="botonReportar" disabled>Reportar</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    function validarCampo(campo, expresionRegular, mensajeError) {
+        var valorCampo = campo.value;
+        var expresion = new RegExp(expresionRegular);
+
+        if (valorCampo.trim() !== '' && !expresion.test(valorCampo)) {
+            campo.setCustomValidity(mensajeError);
+            campo.classList.add('is-invalid');
+            return false;
+        } else {
+            campo.setCustomValidity('');
+            campo.classList.remove('is-invalid');
+            return true;
+        }
+    }
+
+    function validarFormulario() {
+        var motivoValido = validarCampo(document.getElementById('id_motivo'), '^[A-Za-z0-9 .,]*$', 'El motivo no debe contener caracteres especiales.');
+
+        var botonReportar = document.getElementById('botonReportar');
+        botonReportar.disabled = !motivoValido;
+    }
+</script>
 {% endblock %}

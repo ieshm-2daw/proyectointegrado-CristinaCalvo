@@ -29,12 +29,6 @@
                         {% endif %}
                     {% endif %}
                 {% endif %}
-                {% if user.is_authenticated %}
-                    {% if ha_realizado_compra %}
-                        <a href="{% url 'valoraciones' pk=servicio.pk %}" class="btn btn-info m-1">Valorar</a>
-                    {% endif %}
-                {% endif %}
-                <a href="{% url 'servicios' %}" class="btn btn-secondary m-1">Volver a lista de servicios</a>
             </div>
             <br><br>
 
@@ -47,9 +41,17 @@
                                     <h2 class="card-title">Valoraciones</h2>
                                     {% for compra in object.compra_set.all %}
                                         {% if compra.valoracion %}
-                                            <p>{{ compra.usuario_comprador.username }}: {{ compra.valoracion }}</p>
+                                        <div class="valoracion">
+                                            <span><img src="{{ compra.usuario_comprador.avatar.url }}" alt="Avatar" class="avatar me-3">{{ compra.usuario_comprador.username }} - {{ compra.fecha }} - {{ compra.puntuacion}}/5</span>
+                                            <p>{{ compra.valoracion }}</p><br>
+                                        </div>
                                         {% endif %}
                                     {% endfor %}
+                                    {% if user.is_authenticated %}
+                                        {% if ha_realizado_compra %}
+                                            <a href="{% url 'valoraciones' pk=servicio.pk %}" class="btn btn-info m-1">Valorar</a>
+                                        {% endif %}
+                                    {% endif %}
                                 </div>
                             </div>
                         {% else %}
@@ -62,6 +64,9 @@
                     </div>
                 </div>
             </div>
+        </div>
+        <div class="mt-3 text-center">
+            <a href="{% url 'servicios' %}" class="btn btn-secondary">Volver a lista de servicios</a>
         </div>
         
     </div>
@@ -77,5 +82,12 @@
                 max-width: 100%;
             }
         }
+
+        .avatar {
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+    }
+
     </style>
 {% endblock %}
