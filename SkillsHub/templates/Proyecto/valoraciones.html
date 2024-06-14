@@ -10,7 +10,7 @@
                 {% csrf_token %}
                 <div class="form-group mt-3">
                     <label for="id_valoracion">Valoración</label>
-                    <textarea class="form-control" id="id_valoracion" name="valoracion" rows="3" placeholder="Ingresa tu valoración">{{ user.compras_realizadas.first.valoracion|default_if_none:"" }}</textarea>
+                    <textarea class="form-control" id="id_valoracion" name="valoracion" rows="3" placeholder="Ingresa tu valoración">{{ user.compras_realizadas.valoracion|default_if_none:"" }}</textarea>
                 </div>
                 <div class="form-group mt-2" required>
                     <label for="id_puntuacion">Puntuación</label>

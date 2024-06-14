@@ -18,7 +18,7 @@
                         </div>
                         <div class="form-group">
                             <label for="id_comentario">Comentario</label>
-                            <textarea class="form-control" id="id_comentario" name="comentario" rows="3" placeholder="Ingresa una descripción" oninput="validarCampo(this, '^[A-Za-z0-9 .,]*$', 'El comentario no debe contener caracteres especiales.')">{{ user.comentario }}</textarea>
+                            <textarea class="form-control" id="id_comentario" name="comentario" rows="3" placeholder="Ingresa una descripción" oninput="validarCampo(this, '^[A-Za-z0-9 .,]*$', 'El comentario no debe contener caracteres especiales.')">{{ user.comentario|default_if_none:"" }}</textarea>
                             <div class="invalid-feedback">El comentario no debe contener caracteres especiales.</div>
                         </div>
                         <div class="form-group">
