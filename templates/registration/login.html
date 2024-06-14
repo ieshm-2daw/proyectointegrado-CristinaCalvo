@@ -2,16 +2,50 @@
 {% block content %}
     <div class="container mt-5">
         <div class="row justify-content-center">
-            <div class="col-md-6">
-                <h2 class="text-center">Iniciar Sesión</h2>
-                <form action="{% url 'login' %}" method="post">
-                    {% csrf_token %}
-                    {{ form.as_p }}
-                    <input type="hidden" name="next" value="{% url 'servicios' %}">
-                    <div class="text-center">
-                        <input type="submit" class="btn btn-primary" value="Iniciar Sesión">
+            <div class="col-12 col-sm-10 col-md-8 col-lg-7 d-flex justify-content-center">
+                <div class="card shadow" style="width: 77%;">
+                    <div class="card-body">
+                        <h2 class="card-title text-center mb-4">Iniciar Sesión</h2>
+                        <form action="{% url 'login' %}" method="post" class="text-center">
+                            {% csrf_token %}
+                            <div class="form-group mb-3">
+                                <label for="id_username" class="form-label">Nombre de Usuario</label>
+                                <p>{{ form.username }}</p>
+                                {% if form.username.errors %}
+                                    <div class="text-danger">
+                                        {% for error in form.username.errors %}
+                                            <p class="mb-0">{{ error }}</p>
+                                        {% endfor %}
+                                    </div>
+                                {% endif %}
+                            </div>
+                            <div class="form-group mb-3">
+                                <label for="id_password" class="form-label">Contraseña</label>
+                                <p>{{ form.password }}</p>
+                                {% if form.password.errors %}
+                                    <div class="text-danger">
+                                        {% for error in form.password.errors %}
+                                            <p class="mb-0">{{ error }}</p>
+                                        {% endfor %}
+                                    </div>
+                                {% endif %}
+                            {% if form.errors %}
+                                <div class="text-danger">
+                                        {% for field, errors in form.errors.items %}
+                                            {% for error in errors %}
+                                            <p class="mb-0">{{ error }}</p>
+                                            {% endfor %}
+                                        {% endfor %}
+                                </div>
+                            {% endif %}
+                            </div>
+                            <input type="hidden" name="next" value="{% url 'servicios' %}">
+                            <div class="text-center">
+                                <input type="submit" class="btn info btn-block" value="Iniciar Sesión">
+                            </div>
+                        </form>
                     </div>
-                </form>
+                </div>
             </div>
         </div>
     </div>

@@ -6,11 +6,11 @@
 
         <div class="row">
             <div class="col-lg-3 col-md-4">
-                <img src="{{ usuario.avatar.url }}" class="img-fluid rounded-circle mb-3" style="max-width: 200px;" alt="Avatar">
+                <img src="{{ usuario.avatar.url }}" class="img-fluid rounded-circle mb-3 avatar-circle" alt="Avatar">
                 {% if usuario.comentario %}
                     <p class="lead">{{ usuario.comentario }}</p>
                 {% else %}
-                    <p class="lead">No hay información de este usuario</p>
+                    <p class="lead">Soy nuevo en SkillsHub</p>
                 {% endif %}
                 {% if usuario.insignia_perfil %}
                     <div>
@@ -36,7 +36,7 @@
                         <a href="{% url 'lista_compras' %}" class="btn btn-secondary me-1">Compras</a> 
                         <a href="{% url 'lista_insignias' %}" class="btn btn-secondary">Insignias</a> 
                     {% else %}
-                        <a href="{% url 'iniciar_chat' usuario.id %}" class="btn btn-primary me-2">Iniciar Chat</a>
+                        <a href="{% url 'iniciar_chat' usuario.id %}" class="btn btn-primary me-2">Chat</a>
                         <a href="{% url 'reportar' usuario.id %}" class="btn btn-danger me-2">Reportar</a>
                         {% if request.user in usuario.usuarios_seguidores.all %}
                             <a href="{% url 'dejar_de_seguir' usuario.id %}" class="btn btn-secondary">Seguido</a>
@@ -80,6 +80,11 @@
 
 
         <style>
+            .avatar-circle{
+                width: 150px;
+                height: 150px;
+            }
+
             .card-custom {
                 width: 100%;
                 max-width: 310px; 

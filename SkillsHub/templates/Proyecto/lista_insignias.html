@@ -64,18 +64,24 @@
 <body>
     <div class="container insignia">
         <h1>Insignias Desbloqueadas</h1>
-        <ul>
-            {% for usuario_insignia in insignias %}
-                <li class="insignias-lista">
-                    <img src="{{ usuario_insignia.insignia.icono.url }}" alt="{{  usuario_insignia.insignia.nombre }}" width="50" height="50">
-                    <strong>{{ usuario_insignia.insignia.nombre }}</strong>
-                    <form action="{% url 'seleccionar_insignia_perfil' usuario_insignia.id %}" method="post">
-                        {% csrf_token %}
-                        <button class="btn boton" type="submit">Mostrar en perfil</button>
-                    </form>
-                </li>
-            {% endfor %}
-        </ul>
+        {% if insignias %}
+            <ul>
+                {% for usuario_insignia in insignias %}
+                    <li class="insignias-lista">
+                        <img src="{{ usuario_insignia.insignia.icono.url }}" alt="{{ usuario_insignia.insignia.nombre }}" width="50" height="50">
+                        <strong>{{ usuario_insignia.insignia.nombre }}</strong>
+                        <form action="{% url 'seleccionar_insignia_perfil' usuario_insignia.id %}" method="post">
+                            {% csrf_token %}
+                            <button class="btn boton" type="submit">Mostrar en perfil</button>
+                        </form>
+                    </li>
+                {% endfor %}
+            </ul>
+        {% else %}
+            <div class="alert alert-info text-center" role="alert">
+                No tienes insignias desbloqueadas actualmente.
+            </div>
+        {% endif %}
     </div>
 </body>
 </html>

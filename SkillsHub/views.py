@@ -26,7 +26,7 @@ class Servicios(ListView):
 
     def get_queryset(self):
         queryset = Servicio.objects.filter(activo=True)
-        categoria = self.request.GET.get('categorias', None)
+        categoria = self.request.GET.get('categoria', None)
         ubicacion = self.request.GET.get('ubicacion', None)  
 
         if categoria:
@@ -39,7 +39,7 @@ class Servicios(ListView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['form_categoria'] = self.form_class_categoria(initial={'categorias': self.request.GET.get('categorias', None)})
+        context['form_categoria'] = self.form_class_categoria(initial={'categoria': self.request.GET.get('categoria', None)})
         context['form_ubicacion'] = self.form_class_ubicacion(initial={'ubicacion': self.request.GET.get('ubicacion', None)}) 
         return context
 
@@ -96,11 +96,17 @@ class Actualiza(UpdateView):
         user = self.request.user
         if user.is_authenticated:
             if user.is_superuser:
-                return queryset.all() # Si el usuario es administrador, devuelve todos los objetos
+                return queryset.all() 
             else:
-                return queryset.filter(usuario=user)  # Si el usuario no es administrador, filtra por el usuario actual
+                return queryset.filter(usuario=user) 
         else:
-            return queryset.none() # Si el usuario no está autenticado, devuelve un queryset vacío
+            return queryset.none()  
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['categorias'] = Categoria.objects.all()  # Agrega todas las categorías al contexto
+        context['ubicaciones'] = Ubicacion.objects.all()  # Agrega todas las ubicaciones al contexto
+        return context
 
 class Borra(DeleteView):
     model = Servicio
@@ -142,7 +148,7 @@ class RealizarCompra(View): #Como tanto fecha como fecha_limite de valoracion so
 
         # Comprobar que tiene suficiente saldo
         if usuario_comprador.saldo < servicio.precio:
-            messages.error(request, 'No tienes suficiente saldo para realizar esta compra.')
+            messages.error(request, 'No tienes suficiente saldo para realizar esta compra. Para meter dinero ve a configuración en tu perfil.')
             return redirect('detalles', pk=pk) #detalles del servicio
 
         compra = Compra(usuario_comprador=usuario_comprador, servicio=servicio, usuario_vendedor=usuario_vendedor)
@@ -378,7 +384,7 @@ def lista_usuarios(request):
             desbanear_usuario(usuario)  # Desbanea al usuario
         return redirect('lista_usuarios')  # Redirige a la lista de usuarios después de banear/desbanear
     
-    usuarios = Usuario.objects.all()  # Obtén todos los usuarios
+    usuarios = Usuario.objects.all()  
     return render(request, 'Proyecto/lista_usuarios.html', {'usuarios': usuarios})
 
 def reportar_usuario(request, user_id):
@@ -459,10 +465,10 @@ def lista_insignias(request):
             "condicion": lambda u: Compra.objects.filter(usuario_vendedor=u).exists()
         },
         {
-            "nombre": "Diez servicios diferentes vendidos",
-            "descripcion": "Has vendido diez servicios diferentes.",
-            "icono": "insignias/diez_servicios_vendidos.png",
-            "condicion": lambda u: Compra.objects.filter(usuario_vendedor=u).values('servicio').distinct().count() >= 10
+            "nombre": "Cinco servicios diferentes vendidos",
+            "descripcion": "Has vendido cinco servicios diferentes.",
+            "icono": "insignias/cinco_servicios_vendidos.png",
+            "condicion": lambda u: Compra.objects.filter(usuario_vendedor=u).values('servicio').distinct().count() >= 5
         },
         {
             "nombre": "Primera valoración de 5 estrellas",

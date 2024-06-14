@@ -18,10 +18,10 @@
                 <div class="card-body">
                     <a href="{% url 'chat' room.slug %}" style="text-decoration: none; color: inherit;">
                         <h5 class="card-title">
-                            <img src="{{ room.otro_usuario.avatar.url }}" alt="Avatar" style="max-width: 50px; border-radius: 50%;">
+                            <img src="{{ room.otro_usuario.avatar.url }}" alt="Avatar" style="width: 50px; height: 50px; border-radius: 50%;">
                             {{ room.otro_usuario }}
                         </h5>
-                        <p class="mt-1">Último mensaje: {{ room.ultimo_mensaje.content }} <small>{{ room.ultimo_mensaje.created_on|date:"H:i" }}</small></p>
+                        <p class="mt-1 w-100">Último mensaje: {{ room.ultimo_mensaje.content }} <small>{{ room.ultimo_mensaje.created_on|date:"H:i" }}</small></p>
                     </a>
                 </div>
             </div>

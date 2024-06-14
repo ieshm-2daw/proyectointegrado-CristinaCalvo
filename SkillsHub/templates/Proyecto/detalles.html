@@ -1,5 +1,4 @@
 {% extends './base.html' %}
-
 {% block content %}
     <div class="container mt-5 mb-3">
         <div class="card card-custom mx-auto">
@@ -42,7 +41,7 @@
                                     {% for compra in object.compra_set.all %}
                                         {% if compra.valoracion %}
                                         <div class="valoracion">
-                                            <span><img src="{{ compra.usuario_comprador.avatar.url }}" alt="Avatar" class="avatar me-3">{{ compra.usuario_comprador.username }} - {{ compra.fecha }} - {{ compra.puntuacion}}/5</span>
+                                            <span><img src="{{ compra.usuario_comprador.avatar.url }}" alt="Avatar" class="avatar-detalles me-3">{{ compra.usuario_comprador.username }} - {{ compra.fecha }} - {{ compra.puntuacion}}/5</span>
                                             <p>{{ compra.valoracion }}</p><br>
                                         </div>
                                         {% endif %}
@@ -58,6 +57,11 @@
                             <div class="card card-custom">
                                 <div class="card-body">
                                     <p>No hay valoraciones sobre este servicio</p>
+                                    {% if user.is_authenticated %}
+                                    {% if ha_realizado_compra %}
+                                        <a href="{% url 'valoraciones' pk=servicio.pk %}" class="btn btn-info m-1">Valorar</a>
+                                    {% endif %}
+                                {% endif %}
                                 </div>
                             </div>
                         {% endif %}
@@ -83,7 +87,7 @@
             }
         }
 
-        .avatar {
+        .avatar-detalles {
         width: 40px;
         height: 40px;
         border-radius: 50%;
