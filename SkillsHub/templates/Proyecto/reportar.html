@@ -13,7 +13,7 @@
                         {% csrf_token %}
                         <div class="form-group">
                             <label for="id_motivo">Motivo del reporte</label>
-                            <textarea name="motivo" id="id_motivo" rows="4" class="form-control" placeholder="Describe el motivo del reporte" required oninput="validarCampo(this, '^[A-Za-z0-9 .,]*$', 'El motivo no debe contener caracteres especiales.')"></textarea>
+                            <textarea name="motivo" id="id_motivo" rows="4" class="form-control" placeholder="Describe el motivo del reporte" required oninput="validarCampo(this, '^[A-Za-zñÑáéíóúÁÉÍÓÚ0-9 .,]*$', 'El motivo no debe contener caracteres especiales.')"></textarea>
                             <div class="invalid-feedback">El motivo no debe contener caracteres especiales.</div>
                         </div>
                         <button type="submit" class="btn btn-danger mt-3" id="botonReportar" disabled>Reportar</button>
@@ -41,7 +41,7 @@
     }
 
     function validarFormulario() {
-        var motivoValido = validarCampo(document.getElementById('id_motivo'), '^[A-Za-z0-9 .,]*$', 'El motivo no debe contener caracteres especiales.');
+        var motivoValido = validarCampo(document.getElementById('id_motivo'), '^[A-Za-zñÑáéíóúÁÉÍÓÚ0-9 .,]*$', 'El motivo no debe contener caracteres especiales.');
 
         var botonReportar = document.getElementById('botonReportar');
         botonReportar.disabled = !motivoValido;

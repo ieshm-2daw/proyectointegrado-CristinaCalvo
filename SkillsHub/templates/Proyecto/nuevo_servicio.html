@@ -10,7 +10,7 @@
                 {% csrf_token %}
                 <div class="form-group m-3">
                     <label for="id_nombre">Nombre</label>
-                    <input type="text" class="form-control" id="id_nombre" name="nombre" placeholder="Nombre" required pattern="[A-Za-z][A-Za-z ]*">
+                    <input type="text" class="form-control" id="id_nombre" name="nombre" placeholder="Nombre" required pattern="^[A-Za-zñÑáéíóúÁÉÍÓÚ0-9 .,]*$">
                     <div class="invalid-feedback">El nombre debe comenzar con una letra y no debe contener caracteres especiales.</div>
                 </div>
                 <div class="form-group m-3">
@@ -20,7 +20,7 @@
                 </div>
                 <div class="form-group m-3">
                     <label for="id_descripcion">Descripción</label>
-                    <textarea class="form-control" id="id_descripcion" name="descripcion" rows="3" placeholder="Descripción" required pattern="[A-Za-z][A-Za-z ]*"></textarea>
+                    <textarea class="form-control" id="id_descripcion" name="descripcion" rows="3" placeholder="Descripción" required pattern="^[A-Za-zñÑáéíóúÁÉÍÓÚ0-9 .,]*$"></textarea>
                     <div class="invalid-feedback">La descripción no debe contener caracteres especiales.</div>
                 </div>
                 <div class="form-group m-3">
@@ -76,9 +76,9 @@
         }
 
         function validarFormulario() {
-            var nombreValido = validarCampo(document.getElementById('id_nombre'), '^[A-Za-z][A-Za-z ]*$');
+            var nombreValido = validarCampo(document.getElementById('id_nombre'), '^[A-Za-zñÑáéíóúÁÉÍÓÚ][A-Za-zñÑáéíóúÁÉÍÓÚ ]*$');
             var precioValido = validarCampo(document.getElementById('id_precio'), '^[0-9]+(\\.[0-9]{1,2})?$');
-            var descripcionValida = validarCampo(document.getElementById('id_descripcion'), '^[A-Za-z0-9 .,]*$');
+            var descripcionValida = validarCampo(document.getElementById('id_descripcion'), '^[A-Za-zñÑáéíóúÁÉÍÓÚ0-9 .,]*$');
 
             var botonPublicar = document.getElementById('botonPublicar');
             botonPublicar.disabled = !(nombreValido && precioValido && descripcionValida);

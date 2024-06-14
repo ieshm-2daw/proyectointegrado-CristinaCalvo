@@ -12,7 +12,7 @@
                     <div class="col-12">
                         <div class="form-group m-3">
                             <label for="id_nombre">Nombre</label>
-                            <input type="text" class="form-control" id="id_nombre" name="nombre" placeholder="Nombre" pattern="[A-Za-z][A-Za-z ]*" value="{{ servicio.nombre }}" required oninput="validarFormulario()">
+                            <input type="text" class="form-control" id="id_nombre" name="nombre" placeholder="Nombre" pattern="^[A-Za-zñÑáéíóúÁÉÍÓÚ0-9 .,]*$" value="{{ servicio.nombre }}" required oninput="validarFormulario()">
                             <div class="invalid-feedback">El nombre debe comenzar con una letra y no debe contener caracteres especiales o números.</div>
                         </div>
                         <div class="form-group m-3">
@@ -87,7 +87,7 @@
         function validarFormulario() {
             var nombreValido = validarCampo(
                 document.getElementById('id_nombre'), 
-                '^[A-Za-z][A-Za-z ]*$', 
+                '^[A-Za-zñÑáéíóúÁÉÍÓÚ][A-Za-zñÑáéíóúÁÉÍÓÚ ]*$', 
                 'El nombre debe comenzar con una letra y no debe contener caracteres especiales o números.'
             );
             var precioValido = validarCampo(
@@ -97,7 +97,7 @@
             );
             var descripcionValida = validarCampo(
                 document.getElementById('id_descripcion'), 
-                '^[A-Za-z0-9 .,]*$', 
+                '^[A-Za-z0-9ñÑáéíóúÁÉÍÓÚ .,]*$', 
                 'La descripción no debe contener caracteres especiales.'
             );
     

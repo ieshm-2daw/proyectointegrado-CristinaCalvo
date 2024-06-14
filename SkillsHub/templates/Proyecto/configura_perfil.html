@@ -4,7 +4,7 @@
 <div class="container mt-5">
     <div class="row justify-content-center">
         <div class="col-md-8">
-            <div class="card">
+            <div class="card mb-3">
                 <div class="card-header">
                     <h1 class="card-title">Perfil de Usuario</h1>
                 </div>
@@ -15,23 +15,23 @@
                             <label for="id_saldo">Saldo</label>
                             <input type="number" class="form-control" id="id_saldo" name="saldo" step="0.01" placeholder="Ingresa tu saldo" value="{{ user.saldo|stringformat:"s" }}" oninput="validarCampo(this, '^[0-9]+(\\.[0-9]{1,2})?$', 'El saldo debe ser un número válido.')">
                             <div class="invalid-feedback">El saldo debe ser un número válido.</div>
-                        </div>
+                        </div><br>
                         <div class="form-group">
                             <label for="id_comentario">Comentario</label>
-                            <textarea class="form-control" id="id_comentario" name="comentario" rows="3" placeholder="Ingresa una descripción" oninput="validarCampo(this, '^[A-Za-z0-9 .,]*$', 'El comentario no debe contener caracteres especiales.')">{{ user.comentario|default_if_none:"" }}</textarea>
+                            <textarea class="form-control" id="id_comentario" name="comentario" rows="3" placeholder="Ingresa una descripción" oninput="validarCampo(this, '^[A-Za-zñÑáéíóúÁÉÍÓÚ0-9 .,]*$', 'El comentario no debe contener caracteres especiales.')">{{ user.comentario|default_if_none:"" }}</textarea>
                             <div class="invalid-feedback">El comentario no debe contener caracteres especiales.</div>
-                        </div>
+                        </div><br>
                         <div class="form-group">
                             <label for="id_avatar">Avatar</label>
                             <input type="file" class="form-control-file w-100" id="id_avatar" name="avatar">
                             {% if user.avatar %}
                                 <img src="{{ user.avatar.url }}" alt="Avatar" class="mt-2" style="max-width: 150px;">
                             {% endif %}
-                        </div>
+                        </div><br>
                         <div class="text-center mt-3">
-                            <button type="submit" class="btn btn-primary" id="botonGuardar" disabled>Guardar Cambios</button>
+                            <button type="submit" class="btn btn-success" id="botonGuardar" disabled>Guardar Cambios</button>
                             <a href="{% url 'perfil_usuario' user.pk %}" class="btn btn-secondary">Volver al perfil</a>
-                        </div>
+                        </div><br>
                     </form>
                 </div>
             </div>
@@ -57,7 +57,7 @@
 
     function validarFormulario() {
         var saldoValido = validarCampo(document.getElementById('id_saldo'), '^[0-9]+(\\.[0-9]{1,2})?$', 'El saldo debe ser un número válido.');
-        var comentarioValido = validarCampo(document.getElementById('id_comentario'), '^[A-Za-z0-9 .,]*$', 'El comentario no debe contener caracteres especiales.');
+        var comentarioValido = validarCampo(document.getElementById('id_comentario'), '^[A-Za-zñÑáéíóúÁÉÍÓÚ0-9 .,]*$', 'El comentario no debe contener caracteres especiales.');
 
         var botonGuardar = document.getElementById('botonGuardar');
         botonGuardar.disabled = !(saldoValido && comentarioValido);

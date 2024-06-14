@@ -48,7 +48,7 @@
                                     {% endfor %}
                                     {% if user.is_authenticated %}
                                         {% if ha_realizado_compra %}
-                                            <a href="{% url 'valoraciones' pk=servicio.pk %}" class="btn btn-info m-1">Valorar</a>
+                                            <a href="{% url 'valoraciones' pk=servicio.pk %}" class="btn info m-1">Valorar</a>
                                         {% endif %}
                                     {% endif %}
                                 </div>
@@ -59,7 +59,7 @@
                                     <p>No hay valoraciones sobre este servicio</p>
                                     {% if user.is_authenticated %}
                                     {% if ha_realizado_compra %}
-                                        <a href="{% url 'valoraciones' pk=servicio.pk %}" class="btn btn-info m-1">Valorar</a>
+                                        <a href="{% url 'valoraciones' pk=servicio.pk %}" class="btn info m-1">Valorar</a>
                                     {% endif %}
                                 {% endif %}
                                 </div>
