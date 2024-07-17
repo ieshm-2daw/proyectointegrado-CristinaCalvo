@@ -29,15 +29,17 @@ SECRET_KEY = 'django-insecure-*6_$o!5@d0&ha7n(5uzaxg*xgek_lkej%o%@a+%fqiebjxid7z
 DEBUG = True
 
 PORT = 8000 
-ALLOWED_HOSTS = ['127.0.0.1', 'proyectointegrado-cristinacalvo.onrender.com']
+ALLOWED_HOSTS = ['127.0.0.1', 'proyectointegrado-cristinacalvo.onrender.com', 'https://skillshub.onrender.com']
 
 CORS_ALLOWED_ORIGINS = [
+    'https://skillshub.onrender.com'
     'https://proyectointegrado-cristinacalvo.onrender.com',
-    'http://127.0.0.1:8000/'
+    'http://127.0.0.1:8000/',
 ]
 
 CSRF_TRUSTED_ORIGINS = [
     'https://proyectointegrado-cristinacalvo.onrender.com',
+    'https://skillshub.onrender.com',
     'http://127.0.0.1:8000/',
     
 ]
